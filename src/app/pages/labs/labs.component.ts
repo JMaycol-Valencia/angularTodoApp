@@ -30,12 +30,12 @@ export class LabsComponent {
   edad = 27;
   img = "https://w3schools.com/howto/img_avatar.png";
   state = true;
-  person = {
+  person = signal({
     name: "Maycol",
     age: 27,
     img: "https://w3schools.com/howto/img_avatar.png",
     state: true
-  }
+  });
 
   clickHandler(){
     alert('Hola');
@@ -52,5 +52,33 @@ export class LabsComponent {
   keydowHandler(event: KeyboardEvent){
     const input = event.target as HTMLInputElement;
     console.log(input.value);
+  }
+
+  changeAge(event: Event){
+    const input = event.target as HTMLInputElement;
+    const newValue = input.value;
+    this.person.update(prevState => {
+      return {
+        ...prevState,
+        age: parseInt(newValue,10)
+      }
+    });
+  }
+
+  changeName(event:  Event){
+    //obtenemos el evento desde el HTML
+    const input = event.target as HTMLInputElement;
+    //obtenemos el valor , del evento que campturamos con anterioridad
+    const newVal = input.value;
+
+    //para cambiar un valor con signals lo mejor es hacerlo de la siguiente manera
+    //usamos el metodo update, pasamos el objeto pasado 
+    //y se asigna el nuevo valor
+    this.person.update(prevState => {
+      return {
+        ...prevState,
+        name: newVal
+      }
+    })
   }
 }

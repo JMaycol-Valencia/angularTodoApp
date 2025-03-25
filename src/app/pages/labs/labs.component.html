@@ -13,20 +13,20 @@
   <p>Hola soy {{ name() }} y tengo {{edad}}</p>
   <hr>
   <h2>Uso de Property Biding</h2>
-  <img [src]="person.img" alt="imagen por defecto">
-  <input type="text" [value]="person.name">
-  <input type="number" [value]="person.age">
-  <button [disabled]="person.state">Click me</button>
+  <img [src]="person().img" alt="imagen por defecto">
+  <input type="text" [value]="person().name">
+  <input type="number" [value]="person().age">
+  <button [disabled]="person().state">Click me</button>
   <hr>
   <h2>Event Biding</h2>
   <button (click)="clickHandler()">Click me</button>
   <button (dblclick)="clickHandler()">Doble Click me</button>
   <h2> Evento (change) </h2>
-  <input type="number" [value]="person.age" (change)="changeHandler($event)">
+  <input type="number" [value]="person().age" (change)="changeHandler($event)">
   <h2>Evento Key Down</h2>
-  <input type="text" [value]="person.name" (keydown)="keydowHandler($event)">
+  <input type="text" [value]="person().name" (keydown)="keydowHandler($event)">
   <h2>Evento Key Down Especifico</h2>
-  <input type="text" [value]="person.name" (keydown.shift.t)="clickHandler()">
+  <input type="text" [value]="person().name" (keydown.shift.t)="clickHandler()">
   <hr>
   <h2>Signals</h2>
   <input type="text" [value]="name()" (change)="changeHandler($event)" >
@@ -39,5 +39,31 @@
       {{ i }} {{ task }}
     </li>
   </ul>
+  <hr>
+  <h2>Directivas estructurales ngIf</h2>
+  <div *ngIf="1 === 1">
+    My content 1
+  </div>
+
+  <div *ngIf="name() === 'Maycol'">
+    My content 2
+  </div>
+
+  <input type="number" [value]="person().age" (change)="changeAge($event)">
+  <div *ngIf="name() === 'Maycol' && person().age >= 25 else nameBlock">
+    My content 3
+  </div>
+
+  <ng-template #nameBlock>
+    My content 3.1
+  </ng-template>
+  
+  <hr>
+  <h2>Directiva ng Switch</h2>
+  <div [ngSwitch]="person().name">
+    <div *ngSwitchCase="'Maycol'">My content 1</div>
+    <div *ngSwitchCase="'Juan'">My content 2</div>
+    <div *ngSwitchDefault>My content 3</div>
+  </div>
 
 </div>
