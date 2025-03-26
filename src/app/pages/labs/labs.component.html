@@ -66,4 +66,32 @@
     <div *ngSwitchDefault>My content 3</div>
   </div>
 
+  <hr>
+  <h2>Manejo correcto de un input</h2>
+  <input type="color"  [formControl]="colorControl">
+  <p> Color : {{ colorControl.value }}</p>
+
+  <hr>
+  <h2>Agregando estilo con property biding</h2>
+  <div>
+    <svg>
+      <g>
+        <rect x="10" y="10" width="100" height="100" [attr.fill]="colorControl.value"></rect>
+      </g>
+    </svg>
+  </div>
+  <h2>Modificando el style con propertyBiding</h2>
+  <input type="number" [formControl]="withControl">
+  <span class="box" [style.width.px]="withControl.value"></span>
+
+  <hr>
+  <h2>Manejo de clases en angular</h2>
+  <div>
+    <input type="text" [formControl]="nameControl"> <br>
+    <!-- <span class="message-error" *ngIf="nameControl.invalid && nameControl.touched">Nombre Invalido</span> -->
+    <span class="message-error" [class.active]="nameControl.invalid && nameControl.touched">Nombre Invalido</span>
+  </div>
+  <div>
+    <input type="text">
+  </div>
 </div>

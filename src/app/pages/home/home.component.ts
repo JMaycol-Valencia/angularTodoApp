@@ -2,15 +2,23 @@ import { CommonModule } from '@angular/common';
 import { Component, signal } from '@angular/core';
 
 import { Task } from '../../models/task.model';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
+   newTaskControl =  new FormControl('tarea', {
+    nonNullable: true,
+    validators: [
+      Validators.required,
+    ]
+   })
+
   tasks = signal<Task[]> ([
       {
         id: Date.now(),
@@ -24,11 +32,15 @@ export class HomeComponent {
       }
     ]);
 
-  changeHanldler(event: Event){
-    const input = event.target as HTMLInputElement;
-    const newTask = input.value;
-    this.addTask(newTask);
-    input.value = '';
+    //MODIFICAMOS EL METODO USANDO FORMCONTROL
+  changeHanldler(){
+    if(this.newTaskControl.valid){
+      const value  = this.newTaskControl.value.trim();
+      if(value !== ''){
+        this.addTask(value);
+        this.newTaskControl.setValue('');     
+      }
+    }
   }
 
   addTask(tittle : string){
@@ -56,5 +68,40 @@ export class HomeComponent {
         return task;
       })
     })
+  }
+
+  updateTaskEditingMode(index: number){
+    this.tasks.update((prevState) => {
+      return prevState.map((task, position) => {
+        if(position === index){
+          return{
+            ...task,
+            editing: true
+        }
+      }
+      //LIMITANDO LA CANTIDAD DE TAREAS CON EL ESTADO DE EDICION ACTIVO
+        return {
+          ...task,
+          editing: false
+        };
+      })
+    });
+  }
+
+  updateTaskText(index: number, event: Event){
+    const input = event.target as HTMLInputElement;
+    const newValue = input.value;
+    this.tasks.update((prevState) => {
+      return prevState.map((task, position) => {
+        if(position === index){
+          return{
+            ...task,
+            tittle: newValue,
+            editing: false
+        }
+      }
+        return task;
+      })
+    });
   }
 }

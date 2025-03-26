@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+
 
 @Component({
   selector: 'app-labs',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './labs.component.html',
   styleUrl: './labs.component.css'
 })
@@ -26,6 +27,19 @@ export class LabsComponent {
   ])
 
   name = signal("Maycol");
+  colorControl = new FormControl();
+  withControl = new FormControl('50',{
+    nonNullable: true,
+  });
+
+  nameControl = new FormControl('',{
+    nonNullable: true,
+    validators: [
+      Validators.required,
+      Validators.minLength(3),
+    ]
+  });
+
   nameSinSignal = "Maycol";
   edad = 27;
   img = "https://w3schools.com/howto/img_avatar.png";
@@ -36,6 +50,14 @@ export class LabsComponent {
     img: "https://w3schools.com/howto/img_avatar.png",
     state: true
   });
+
+  constructor(){
+    this.colorControl.valueChanges.subscribe(value => {
+      console.log(value);
+    });
+
+  }
+
 
   clickHandler(){
     alert('Hola');
