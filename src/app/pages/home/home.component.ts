@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, computed,effect, Injector, inject, signal } from '@angular/core';
 
 import { Task } from '../../models/task.model';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -19,18 +19,65 @@ export class HomeComponent {
     ]
    })
 
-  tasks = signal<Task[]> ([
-      {
-        id: Date.now(),
-        tittle: 'Task 1',
-        completed: false
-      },
-      {
-        id: Date.now(),
-        tittle: 'Task 2',
-        completed: false
+  tasks = signal<Task[]> (
+    [
+      // {
+      //   id: Date.now(),
+      //   tittle: 'Task 1',
+      //   completed: false
+      // },
+      // {
+      //   id: Date.now(),
+      //   tittle: 'Task 2',
+      //   completed: false
+      // }
+    ]
+  );
+
+    //Asignacion de valores unicos para el string
+    filter = signal<'all' | 'pending' | 'completed'>('all');
+
+    //SEÑAL EN BASE A OTRAS SEÑALES QUE SE EJECUTARA
+    taskByFilter = computed(() => {
+      //OBTENEMOS EL FILTRO Y LAS TAREAS
+      const filter = this.filter();
+      const tasks = this.tasks();
+
+
+      if(filter === 'pending'){
+        return tasks.filter(task => !task.completed);
       }
-    ]);
+      if(filter === 'completed'){
+        return tasks.filter(task => task.completed);
+      }
+      return tasks;
+    })
+
+    injector = inject(Injector);
+
+    //UN EFFECT NO RETORNA PERO LO QUE SI HACE ES TRACKEAR ALGUN CAMBIO Y ALMACENARLO
+    //puede ser definido en el constructor o en el ngOnInit o como una funcion
+    constructor() {
+      
+    }
+
+    //METODO DE IMPORTANTE DE NUESTRO CICLO DE VIDA DEL COMPONENTE
+    ngOnInit(){
+      const storage = localStorage.getItem('tasks');
+      if(storage){
+        const tasks = JSON.parse(storage)
+        this.tasks.set(tasks)
+      }
+      this.trackTasks();
+    }
+
+    trackTasks(){
+      effect(() => {
+        const tasks = this.tasks();
+        console.log(tasks);
+        localStorage.setItem('tasks', JSON.stringify(tasks))
+      }, { injector: this.injector});
+    }
 
     //MODIFICAMOS EL METODO USANDO FORMCONTROL
   changeHanldler(){
@@ -103,5 +150,9 @@ export class HomeComponent {
         return task;
       })
     });
+  }
+
+  changeFilter(filter: 'all' | 'pending' | 'completed'){
+    this.filter.set(filter);
   }
 }

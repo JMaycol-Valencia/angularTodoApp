@@ -12,6 +12,8 @@
     <pre>
         <code>
           {{ tasks() | json }}
+          <hr>
+          {{ filter() }}
         </code>
       </pre>
 
@@ -20,8 +22,10 @@
       <ul class="todo-list">
 
         <!-- //RENDERIZADO CON NGFOR -->
-        <li (dblclick)="updateTaskEditingMode(i)" [class.editing]="task.editing" [class.completed]="task.completed"
-          *ngFor="let task of tasks();index as i">
+        <li (dblclick)="updateTaskEditingMode(i)"
+         [class.editing]="task.editing" 
+         [class.completed]="task.completed"
+          *ngFor="let task of taskByFilter();index as i">
           <div class="view">
             <input class="toggle" type="checkbox" [checked]="task.completed" (change)="updateTask(i)" />
             <label> {{ task.tittle }}</label>
@@ -60,21 +64,21 @@
 
       </ul>
     </section>
-    <!-- This footer should be hidden by default and shown when there are todos -->
-    <footer class="footer">
-      <!-- This should be `0 items left` by default -->
-      <span class="todo-count"><strong>{{ tasks().length }}</strong> item<span *ngIf="tasks().length > 1">s</span>
+    <!-- AGREGAMOS UNA CONDICIONAL PARA EL FOOTER Y SOLO SE MUESTR CUANDO LA LISTA TENGA POR LO MENOS UN ELEMENTO -->
+    <footer class="footer" *ngIf="taskByFilter().length > 0">
+      <!-- CAMBIAMOS LA LISTA DE LA QUE SE COMPRUEBA PARA VER EL TAMAÑO Y LA PLURALIZACION -->
+      <span class="todo-count"><strong>{{ taskByFilter().length }}</strong> item<span *ngIf="taskByFilter().length > 1">s</span>
         left</span>
-      <!-- Remove this if you don't implement routing -->
+      <!-- Agregamos CONDICIONALES PARA COMPROBAR EL ESTADO DE SELECTED EN NUESTROS FILTROS -->
       <ul class="filters">
         <li>
-          <a routerLink="/" class="selected">All</a>
+          <a (click)="changeFilter('all')" [class.selected]="filter() == 'all' ">All</a>
         </li>
         <li>
-          <a routerLink="/pending">Pending</a>
+          <a (click)="changeFilter('pending')" [class.selected]="filter() == 'pending' ">Pending</a>
         </li>
         <li>
-          <a routerLink="/completed">Completed</a>
+          <a (click)="changeFilter('completed')" [class.selected]="filter() == 'completed' ">Completed</a>
         </li>
       </ul>
       <!-- Hidden if no completed items are left ↓ -->
