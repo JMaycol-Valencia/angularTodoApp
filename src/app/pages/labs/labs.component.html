@@ -1,97 +1,149 @@
 <div class="container">
   <h1>Iniciando proyecto</h1>
-  <h2>{{variable1}}</h2>
+  <h2>{{ variable1 }}</h2>
   <ul>
     <li *ngFor="let task of tasks()">
-      {{task}}
+      {{ task }}
     </li>
   </ul>
-  <hr>
+  <hr />
   <h2>Uso de String Interpolation</h2>
-  <h2>{{'hola'.repeat(4) }}</h2>
-  <p>La suma de 3 + 3 es : {{ 3 + 3}}</p>
-  <p>Hola soy {{ name() }} y tengo {{edad}}</p>
-  <hr>
+  <h2>{{ "hola".repeat(4) }}</h2>
+  <p>La suma de 3 + 3 es : {{ 3 + 3 }}</p>
+  <p>Hola soy {{ name() }} y tengo {{ edad }}</p>
+  <hr />
   <h2>Uso de Property Biding</h2>
-  <img [src]="person().img" alt="imagen por defecto">
-  <input type="text" [value]="person().name">
-  <input type="number" [value]="person().age">
+  <img [src]="person().img" alt="imagen por defecto" />
+  <input type="text" [value]="person().name" />
+  <input type="number" [value]="person().age" />
   <button [disabled]="person().state">Click me</button>
-  <hr>
+  <hr />
   <h2>Event Biding</h2>
   <button (click)="clickHandler()">Click me</button>
   <button (dblclick)="clickHandler()">Doble Click me</button>
-  <h2> Evento (change) </h2>
-  <input type="number" [value]="person().age" (change)="changeHandler($event)">
+  <h2>Evento (change)</h2>
+  <input
+    type="number"
+    [value]="person().age"
+    (change)="changeHandler($event)"
+  />
   <h2>Evento Key Down</h2>
-  <input type="text" [value]="person().name" (keydown)="keydowHandler($event)">
+  <input
+    type="text"
+    [value]="person().name"
+    (keydown)="keydowHandler($event)"
+  />
   <h2>Evento Key Down Especifico</h2>
-  <input type="text" [value]="person().name" (keydown.shift.t)="clickHandler()">
-  <hr>
+  <input
+    type="text"
+    [value]="person().name"
+    (keydown.shift.t)="clickHandler()"
+  />
+  <hr />
   <h2>Signals</h2>
-  <input type="text" [value]="name()" (change)="changeHandler($event)" >
-  <p> name : {{ name() }}</p>
-  <hr>
+  <input type="text" [value]="name()" (change)="changeHandler($event)" />
+  <p>name : {{ name() }}</p>
+  <hr />
   <h2>Estructuras de control</h2>
-  <p>Tamaño de la lista taks : {{tasks().length}}</p>
+  <p>Tamaño de la lista taks : {{ tasks().length }}</p>
+  <h2>Nueva Directiva ng For</h2>
   <ul>
-    <li *ngFor="let task of tasks(); index as i">
+    <!-- <li *ngFor="let task of tasks(); index as i">
       {{ i }} {{ task }}
-    </li>
+    </li> -->
+    @for(task of tasks();track task; let i = $index){
+    <li>{{ i }} {{ task }}</li>
+    }@empty {
+    <li>La lista esta vacia</li>
+    }
   </ul>
-  <hr>
+  <hr />
   <h2>Directivas estructurales ngIf</h2>
-  <div *ngIf="1 === 1">
+
+  <!-- MODIFICAREMOS LA ESTRUCTURA DE CONTROL POR LA NUEVA SINTAXYS -->
+  <!-- <div *ngIf="1 === 1">
     My content 1
-  </div>
+  </div> -->
 
-  <div *ngIf="name() === 'Maycol'">
-    My content 2
-  </div>
+  <!-- DIRECTIVA IF CON LA NUEVA SINTAXYS -->
+  @if (1 === 1){
+  <div>My content 1</div>
+  }
 
-  <input type="number" [value]="person().age" (change)="changeAge($event)">
-  <div *ngIf="name() === 'Maycol' && person().age >= 25 else nameBlock">
+  <div *ngIf="name() === 'Maycol'">My content 2</div>
+
+  <h2>Nueva Directiva ng if</h2>
+  @if (name() === 'Maycol'){
+  <div>My content 2</div>
+  }
+
+  <input type="number" [value]="person().age" (change)="changeAge($event)" />
+  <div *ngIf="name() === 'Maycol' && person().age >= 25; else nameBlock">
     My content 3
   </div>
 
-  <ng-template #nameBlock>
-    My content 3.1
-  </ng-template>
-  
-  <hr>
+  <ng-template #nameBlock> My content 3.1 </ng-template>
+  <h2>NG IF ELSE angular 17</h2>
+
+  <h2>Nueva Directiva ng if else</h2>
+  @if(name() === 'Maycol' && person().age >= 25){
+  <div>My content 17.1</div>
+  }@else{
+  <div>My content 17.2</div>
+  }
+
+  <hr />
   <h2>Directiva ng Switch</h2>
   <div [ngSwitch]="person().name">
     <div *ngSwitchCase="'Maycol'">My content 1</div>
     <div *ngSwitchCase="'Juan'">My content 2</div>
     <div *ngSwitchDefault>My content 3</div>
   </div>
+  <h2>Nueva Directiva ng Switch</h2>
+  @switch (person().name) { @case ( 'Maycol') {
+  <div>My content 1</div>
+  }@case ( 'Juan') {
+  <div>My content 2</div>
+  }@default {
+  <div>My content 3</div>
+  } }
 
-  <hr>
+  <hr />
   <h2>Manejo correcto de un input</h2>
-  <input type="color"  [formControl]="colorControl">
-  <p> Color : {{ colorControl.value }}</p>
+  <input type="color" [formControl]="colorControl" />
+  <p>Color : {{ colorControl.value }}</p>
 
-  <hr>
+  <hr />
   <h2>Agregando estilo con property biding</h2>
   <div>
     <svg>
       <g>
-        <rect x="10" y="10" width="100" height="100" [attr.fill]="colorControl.value"></rect>
+        <rect
+          x="10"
+          y="10"
+          width="100"
+          height="100"
+          [attr.fill]="colorControl.value"
+        ></rect>
       </g>
     </svg>
   </div>
   <h2>Modificando el style con propertyBiding</h2>
-  <input type="number" [formControl]="withControl">
+  <input type="number" [formControl]="withControl" />
   <span class="box" [style.width.px]="withControl.value"></span>
 
-  <hr>
+  <hr />
   <h2>Manejo de clases en angular</h2>
   <div>
-    <input type="text" [formControl]="nameControl"> <br>
+    <input type="text" [formControl]="nameControl" /> <br />
     <!-- <span class="message-error" *ngIf="nameControl.invalid && nameControl.touched">Nombre Invalido</span> -->
-    <span class="message-error" [class.active]="nameControl.invalid && nameControl.touched">Nombre Invalido</span>
+    <span
+      class="message-error"
+      [class.active]="nameControl.invalid && nameControl.touched"
+      >Nombre Invalido</span
+    >
   </div>
   <div>
-    <input type="text">
+    <input type="text" />
   </div>
 </div>
